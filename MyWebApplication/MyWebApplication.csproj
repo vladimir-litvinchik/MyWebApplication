@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -25,6 +26,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -150,6 +152,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ViewerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -158,6 +161,13 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="client\.gitignore" />
+    <Content Include="client\apps\viewer-e2e\src\plugins\index.js" />
+    <Content Include="client\apps\viewer\jest.config.js" />
+    <Content Include="client\apps\viewer\src\app\app.component.html" />
+    <Content Include="client\apps\viewer\src\favicon.ico" />
+    <Content Include="client\apps\viewer\src\index.html" />
+    <Content Include="client\jest.config.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -173,6 +183,33 @@
     <Content Include="Scripts\app\home.viewmodel.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="client\.editorconfig" />
+    <Content Include="client\.prettierignore" />
+    <Content Include="client\.prettierrc" />
+    <Content Include="client\angular.json" />
+    <Content Include="client\apps\.gitkeep" />
+    <Content Include="client\apps\viewer-e2e\cypress.json" />
+    <Content Include="client\apps\viewer-e2e\src\fixtures\example.json" />
+    <Content Include="client\apps\viewer-e2e\tsconfig.e2e.json" />
+    <Content Include="client\apps\viewer-e2e\tsconfig.json" />
+    <Content Include="client\apps\viewer\browserslist" />
+    <Content Include="client\apps\viewer\src\app\app.component.less" />
+    <Content Include="client\apps\viewer\src\app\variables.less" />
+    <Content Include="client\apps\viewer\src\assets\.gitkeep" />
+    <Content Include="client\apps\viewer\src\styles.less" />
+    <Content Include="client\apps\viewer\tsconfig.app.json" />
+    <Content Include="client\apps\viewer\tsconfig.json" />
+    <Content Include="client\apps\viewer\tsconfig.spec.json" />
+    <Content Include="client\apps\viewer\tslint.json" />
+    <Content Include="client\libs\.gitkeep" />
+    <Content Include="client\nx.json" />
+    <Content Include="client\package-lock.json" />
+    <Content Include="client\package.json" />
+    <Content Include="client\README.md" />
+    <Content Include="client\tools\schematics\.gitkeep" />
+    <Content Include="client\tools\tsconfig.tools.json" />
+    <Content Include="client\tsconfig.json" />
+    <Content Include="client\tslint.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -195,8 +232,22 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="Views\Viewer\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <TypeScriptCompile Include="client\apps\viewer-e2e\src\integration\app.spec.ts" />
+    <TypeScriptCompile Include="client\apps\viewer-e2e\src\support\app.po.ts" />
+    <TypeScriptCompile Include="client\apps\viewer-e2e\src\support\commands.ts" />
+    <TypeScriptCompile Include="client\apps\viewer-e2e\src\support\index.ts" />
+    <TypeScriptCompile Include="client\apps\viewer\src\app\app.component.spec.ts" />
+    <TypeScriptCompile Include="client\apps\viewer\src\app\app.component.ts" />
+    <TypeScriptCompile Include="client\apps\viewer\src\app\app.module.ts" />
+    <TypeScriptCompile Include="client\apps\viewer\src\environments\environment.prod.ts" />
+    <TypeScriptCompile Include="client\apps\viewer\src\environments\environment.ts" />
+    <TypeScriptCompile Include="client\apps\viewer\src\main.ts" />
+    <TypeScriptCompile Include="client\apps\viewer\src\polyfills.ts" />
+    <TypeScriptCompile Include="client\apps\viewer\src\test-setup.ts" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>
@@ -226,11 +277,15 @@
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
@@ -260,10 +315,32 @@
     </PropertyGroup>
     <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <!-- Client App Config -->
+  <PropertyGroup>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <SpaRoot>client\</SpaRoot>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Content Remove="$(SpaRoot)**" />
+    <None Remove="$(SpaRoot)**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+  <Target Name="BuildClientApp" AfterTargets="AfterBuild">
+    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+    <!-- Include the newly-built files in the publish output -->
+    <ItemGroup>
+      <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
+      <DistFiles Include="$(SpaRoot)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
   </Target>
-  <Target Name="AfterBuild">
-  </Target> -->
 </Project>
