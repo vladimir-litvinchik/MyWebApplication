@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -9,7 +8,11 @@ namespace MyWebApplication.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            var files = Directory
+                .GetFiles(Server.MapPath("~/Files/"))
+                .Select(file => Path.GetFileName(file));
+
+            return View(files);
         }
     }
 }

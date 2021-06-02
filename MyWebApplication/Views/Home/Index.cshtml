@@ -1,5 +1,14 @@
-﻿@{ 
+﻿@model IEnumerable<string>
+@{ 
     ViewBag.Title = "MyWebApplication";
 }
 
-@Html.ActionLink("Navigate to Viewer", "Index", "Viewer")
+<div class="jumbotron">
+    <h3>Select File</h3>
+    <ul>
+        @foreach (var file in Model)
+        {
+            <li>@Html.ActionLink(file, "Index", "Viewer", new { f = file }, null)</li>
+        }
+    </ul>
+</div>

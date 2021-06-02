@@ -14,10 +14,11 @@ namespace MyWebApplication.Viewer.Cache
         private readonly GroupDocs.Viewer.Viewer viewer;
         private readonly PngViewOptions pngViewOptions;
         private readonly ViewInfoOptions viewInfoOptions;
-        private static readonly Common.Config.GlobalConfiguration globalConfiguration = new Common.Config.GlobalConfiguration();
+        private readonly Common.Config.GlobalConfiguration globalConfiguration;
 
-        public PngViewer(string filePath, IViewerCache cache, LoadOptions loadOptions, int pageNumber = -1, int newAngle = 0)
+        public PngViewer(Common.Config.GlobalConfiguration globalConfiguration, string filePath, IViewerCache cache, LoadOptions loadOptions, int pageNumber = -1, int newAngle = 0)
         {
+            this.globalConfiguration = globalConfiguration;
             this.cache = cache;
             this.filePath = filePath;
             this.viewer = new GroupDocs.Viewer.Viewer(filePath, loadOptions);
@@ -116,7 +117,7 @@ namespace MyWebApplication.Viewer.Cache
         /// Adds watermark on document if its specified in configuration file.
         /// </summary>
         /// <param name="options"></param>
-        private static void SetWatermarkOptions(ViewOptions options)
+        private void SetWatermarkOptions(ViewOptions options)
         {
             Watermark watermark = null;
 

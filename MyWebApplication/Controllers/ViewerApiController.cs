@@ -38,8 +38,7 @@ namespace MyWebApplication.Controllers
         private static readonly Viewer.Common.Config.GlobalConfiguration globalConfiguration 
             = new Viewer.Common.Config.GlobalConfiguration();
 
-        private static readonly string cachePath 
-            = Path.Combine(globalConfiguration.Viewer.GetFilesDirectory(), globalConfiguration.Viewer.GetCacheFolderName());
+        private readonly string cachePath; 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewerApiController"/> class.
@@ -48,9 +47,13 @@ namespace MyWebApplication.Controllers
         {
             List<string> fontsDirectory = new List<string>();
             if (!string.IsNullOrEmpty(globalConfiguration.Viewer.GetFontsDirectory()))
-            {
                 fontsDirectory.Add(globalConfiguration.Viewer.GetFontsDirectory());
-            }
+
+            string filesDir = System.Web.Hosting.HostingEnvironment.MapPath("~/Files");
+            string cacheDirName = globalConfiguration.Viewer.GetCacheFolderName();
+
+            globalConfiguration.Viewer.SetFilesDirectory(filesDir);
+            cachePath = Path.Combine(filesDir, cacheDirName);
         }
 
         /// <summary>
@@ -176,14 +179,14 @@ namespace MyWebApplication.Controllers
                 PageDescriptionEntity page;
                 if (globalConfiguration.Viewer.GetIsHtmlMode())
                 {
-                    using (HtmlViewer htmlViewer = new HtmlViewer(documentGuid, cache, GetLoadOptions(password)))
+                    using (HtmlViewer htmlViewer = new HtmlViewer(globalConfiguration, documentGuid, cache, GetLoadOptions(password)))
                     {
                         page = this.GetPageDescritpionEntity(htmlViewer, documentGuid, pageNumber, fileCacheSubFolder);
                     }
                 }
                 else
                 {
-                    using (PngViewer pngViewer = new PngViewer(documentGuid, cache, GetLoadOptions(password)))
+                    using (PngViewer pngViewer = new PngViewer(globalConfiguration, documentGuid, cache, GetLoadOptions(password)))
                     {
                         page = this.GetPageDescritpionEntity(pngViewer, documentGuid, pageNumber, fileCacheSubFolder);
                     }
@@ -229,14 +232,14 @@ namespace MyWebApplication.Controllers
                 PageDescriptionEntity page;
                 if (globalConfiguration.Viewer.GetIsHtmlMode())
                 {
-                    using (HtmlViewer htmlViewer = new HtmlViewer(documentGuid, cache, GetLoadOptions(password), pageNumber, newAngle))
+                    using (HtmlViewer htmlViewer = new HtmlViewer(globalConfiguration, documentGuid, cache, GetLoadOptions(password), pageNumber, newAngle))
                     {
                         page = this.GetPageDescritpionEntity(htmlViewer, documentGuid, pageNumber, fileCacheSubFolder);
                     }
                 }
                 else
                 {
-                    using (PngViewer pngViewer = new PngViewer(documentGuid, cache, GetLoadOptions(password), pageNumber, newAngle))
+                    using (PngViewer pngViewer = new PngViewer(globalConfiguration, documentGuid, cache, GetLoadOptions(password), pageNumber, newAngle))
                     {
                         page = this.GetPageDescritpionEntity(pngViewer, documentGuid, pageNumber, fileCacheSubFolder);
                     }
@@ -564,7 +567,7 @@ namespace MyWebApplication.Controllers
         /// <param name="postedData">Posted data with document guid.</param>
         /// <param name="loadAllPages">Flag to load all pages.</param>
         /// <returns>Document pages data, dimensions and rotation angles.</returns>
-        private static LoadDocumentEntity GetDocumentPages(PostedDataEntity postedData, bool loadAllPages, bool printVersion = false)
+        private LoadDocumentEntity GetDocumentPages(PostedDataEntity postedData, bool loadAllPages, bool printVersion = false)
         {
             // get/set parameters
             string documentGuid = postedData.guid;
@@ -583,14 +586,14 @@ namespace MyWebApplication.Controllers
             LoadDocumentEntity loadDocumentEntity;
             if (globalConfiguration.Viewer.GetIsHtmlMode() && !printVersion)
             {
-                using (HtmlViewer htmlViewer = new HtmlViewer(documentGuid, cache, GetLoadOptions(password)))
+                using (HtmlViewer htmlViewer = new HtmlViewer(globalConfiguration, documentGuid, cache, GetLoadOptions(password)))
                 {
                     loadDocumentEntity = GetLoadDocumentEntity(loadAllPages, documentGuid, fileCacheSubFolder, htmlViewer, printVersion);
                 }
             }
             else
             {
-                using (PngViewer pngViewer = new PngViewer(documentGuid, cache, GetLoadOptions(password)))
+                using (PngViewer pngViewer = new PngViewer(globalConfiguration, documentGuid, cache, GetLoadOptions(password)))
                 {
                     loadDocumentEntity = GetLoadDocumentEntity(loadAllPages, documentGuid, fileCacheSubFolder, pngViewer, printVersion);
                 }
@@ -599,7 +602,7 @@ namespace MyWebApplication.Controllers
             return loadDocumentEntity;
         }
 
-        private static LoadDocumentEntity GetLoadDocumentEntity(bool loadAllPages, string documentGuid, string fileCacheSubFolder, ICustomViewer customViewer, bool printVersion)
+        private LoadDocumentEntity GetLoadDocumentEntity(bool loadAllPages, string documentGuid, string fileCacheSubFolder, ICustomViewer customViewer, bool printVersion)
         {
             if (loadAllPages)
             {

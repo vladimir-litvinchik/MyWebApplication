@@ -235,6 +235,9 @@
     <Content Include="client\tools\tsconfig.tools.json" />
     <Content Include="client\tsconfig.json" />
     <Content Include="client\tslint.json" />
+    <Content Include="Files\sample.doc" />
+    <Content Include="Files\sample.docx" />
+    <Content Include="Files\sample.ppt" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -338,7 +341,7 @@
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
-  <Target Name="BuildClientApp" AfterTargets="AfterBuild" Condition="'true' == 'false'">
+  <Target Name="BuildClientApp" AfterTargets="AfterBuild">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
