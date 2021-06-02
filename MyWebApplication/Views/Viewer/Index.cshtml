@@ -1,5 +1,8 @@
 ﻿@{ 
     Layout = null;
+
+    var baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+    var apiEndpoint = $"{baseUrl}viewer";
 }
 
 <!DOCTYPE html>
@@ -13,6 +16,9 @@
 </head>
 <body>
     <client-root></client-root>
+    <script type="text/javascript">
+        var apiEndpoint = "@apiEndpoint";
+    </script>
     <script src="~/client/dist/runtime-es2015.js" type="module"></script>
     <script src="~/client/dist/polyfills-es2015.js" type="module"></script>
     <script src="~/client/dist/runtime-es5.js" nomodule></script>

@@ -7,11 +7,18 @@ import { ViewerModule } from "@groupdocs.examples.angular/viewer";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ConfigService } from '@groupdocs.examples.angular/common-components';
 
+declare global {
+  interface Window {
+    apiEndpoint: string;
+  }
+}
+
 export function createViewerConfig() {
-  const endpoint = "http://localhost:8080/";
+  const endpoint = window.apiEndpoint;
 
   const config = new ConfigService();
   config.apiEndpoint = endpoint;
+  config.getViewerApiEndpoint = () => endpoint;
   return config;
 }
 
