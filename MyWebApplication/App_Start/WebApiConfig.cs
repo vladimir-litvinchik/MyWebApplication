@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Serialization;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 
 namespace MyWebApplication
@@ -7,18 +8,14 @@ namespace MyWebApplication
     {
         public static void Register(HttpConfiguration config)
         {
-            // Use camel case for JSON data.
-            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver 
-                = new CamelCasePropertyNamesContractResolver();
+            //First remove the current formatters
+            config.Formatters.Clear();
+
+            //Then add the json formatter
+            config.Formatters.Add(new JsonMediaTypeFormatter());
 
             // Web API routes
             config.MapHttpAttributeRoutes();
-
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
         }
     }
 }
