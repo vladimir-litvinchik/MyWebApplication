@@ -153,6 +153,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CommunityController.cs" />
     <Compile Include="Controllers\ViewerApiController.cs" />
     <Compile Include="Controllers\ViewerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -261,6 +262,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Viewer\Index.cshtml" />
+    <Content Include="Views\Community\CommunityPricing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -348,6 +350,7 @@
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
+  <ItemGroup />
   <Target Name="BuildClientApp" AfterTargets="AfterBuild">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />

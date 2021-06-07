@@ -16,32 +16,18 @@ namespace MyWebApplication.Viewer.Common.Resources
         /// <returns></returns>
         public static string GetFreeFileName(string directory, string fileName)
         {
-            string resultFileName = "";
-            try
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+            var extension = Path.GetExtension(fileName);
+
+            var fileNumber = 1;
+            var filePath = Path.Combine(directory, fileName);
+            while (File.Exists(filePath))
             {
-                // get all files from the directory
-                string[] listOfFiles = Directory.GetFiles(directory);
-                for (int i = 0; i < listOfFiles.Length; i++)
-                {
-                    // check if file with current name already exists
-                    int number = i + 1;
-                    string newFileName = Path.GetFileNameWithoutExtension(fileName) + "-Copy(" + number + ")." + Path.GetExtension(fileName);
-                    resultFileName = Path.Combine(directory, newFileName);
-                    if (File.Exists(resultFileName))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                var fileNameCandidate = $"{fileNameWithoutExtension}({fileNumber++}){extension}";
+                filePath = Path.Combine(directory, fileNameCandidate);
             }
-            catch (System.Exception e)
-            {
-                throw e;
-            }
-            return resultFileName;
+
+            return filePath;
         }
 
         /// <summary>
