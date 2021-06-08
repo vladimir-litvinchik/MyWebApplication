@@ -419,6 +419,46 @@ namespace MyWebApplication.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("printPdf")]
+        public HttpResponseMessage GetPdf(PostedDataEntity postedData)
+        {
+            try
+            {
+                string documentGuid = postedData.guid;
+                string password = string.IsNullOrEmpty(postedData.password) ? null : postedData.password;
+
+                var fileFolderName = Path.GetFileName(documentGuid).Replace(".", "_");
+                string fileCacheSubFolder = Path.Combine(cachePath, fileFolderName);
+
+                if (!File.Exists(documentGuid))
+                {
+                    throw new GroupDocsViewerException("File not found.");
+                }
+
+                IViewerCache cache = new FileViewerCache(cachePath, fileCacheSubFolder);
+
+                using (HtmlViewer htmlViewer = new HtmlViewer(globalConfiguration, documentGuid, cache, GetLoadOptions(password)))
+                {
+                    byte[] bytes = htmlViewer.GetPdfFile();
+
+                    var result = new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new ByteArrayContent(bytes)
+                    };
+                    result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                    result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                // set exception message
+                return this.Request.CreateResponse(HttpStatusCode.InternalServerError, Resources.GenerateException(ex, postedData.password));
+            }
+        }
+
         /// <summary>
         /// Gets page dimensions and rotation angle.
         /// </summary>

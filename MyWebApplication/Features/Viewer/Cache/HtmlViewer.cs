@@ -16,6 +16,10 @@ namespace MyWebApplication.Viewer.Cache
         private readonly ViewInfoOptions viewInfoOptions;
         private readonly Common.Config.GlobalConfiguration globalConfiguration;
 
+        private readonly string pdfFileName = "file.pdf";
+        private readonly PdfViewOptions pdfViewOptions;
+
+
         public HtmlViewer(Common.Config.GlobalConfiguration globalConfiguration, string filePath, IViewerCache cache, LoadOptions loadOptions, int pageNumber = -1, int newAngle = 0)
         {
             this.globalConfiguration = globalConfiguration;
@@ -23,6 +27,7 @@ namespace MyWebApplication.Viewer.Cache
             this.filePath = filePath;
             this.viewer = new GroupDocs.Viewer.Viewer(filePath, loadOptions);
             this.viewOptions = this.CreateHtmlViewOptions(pageNumber, newAngle);
+            this.pdfViewOptions = this.CreatePdfViewOptions();
             this.viewInfoOptions = ViewInfoOptions.FromHtmlViewOptions(this.viewOptions);
         }
 
@@ -68,6 +73,25 @@ namespace MyWebApplication.Viewer.Cache
             }
 
             return htmlViewOptions;
+        }
+
+        private PdfViewOptions CreatePdfViewOptions()
+        {
+            PdfViewOptions pdfViewOptions = new PdfViewOptions(
+                () =>
+                {
+                    string cacheFilePath = this.cache.GetCacheFilePath(pdfFileName);
+                    return File.Create(cacheFilePath);
+                });
+
+            pdfViewOptions.SpreadsheetOptions = SpreadsheetOptions.ForOnePagePerSheet();
+            pdfViewOptions.SpreadsheetOptions.TextOverflowMode = TextOverflowMode.HideText;
+            pdfViewOptions.SpreadsheetOptions.RenderGridLines = globalConfiguration.Viewer.GetShowGridLines();
+            pdfViewOptions.SpreadsheetOptions.RenderHeadings = true;
+
+            SetWatermarkOptions(pdfViewOptions);
+
+            return pdfViewOptions;
         }
 
         /// <summary>
@@ -199,6 +223,14 @@ namespace MyWebApplication.Viewer.Cache
             }
 
             return missingPages.ToArray();
+        }
+
+        public byte[] GetPdfFile()
+        {
+            this.viewer.View(this.pdfViewOptions);
+
+            var pdfFilePath = this.cache.GetCacheFilePath(pdfFileName);
+            return File.ReadAllBytes(pdfFilePath);
         }
     }
 }

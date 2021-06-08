@@ -18,8 +18,7 @@ namespace MyWebApplication.Viewer.Common.Config
         [JsonProperty]
         public bool upload { get; set; }
 
-        [JsonProperty]
-        public bool print { get; set; }
+        [JsonProperty] public bool print { get; set; } = true;
 
         [JsonProperty]
         public bool browse { get; set; }
