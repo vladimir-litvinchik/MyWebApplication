@@ -38,6 +38,7 @@ namespace MyWebApplication.Controllers
         private static readonly Viewer.Common.Config.GlobalConfiguration globalConfiguration 
             = new Viewer.Common.Config.GlobalConfiguration();
 
+        private readonly string filesPath; 
         private readonly string cachePath; 
 
         /// <summary>
@@ -49,11 +50,11 @@ namespace MyWebApplication.Controllers
             if (!string.IsNullOrEmpty(globalConfiguration.Viewer.GetFontsDirectory()))
                 fontsDirectory.Add(globalConfiguration.Viewer.GetFontsDirectory());
 
-            string filesDir = System.Web.Hosting.HostingEnvironment.MapPath("~/Files");
+            this.filesPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Files");
             string cacheDirName = globalConfiguration.Viewer.GetCacheFolderName();
 
-            globalConfiguration.Viewer.SetFilesDirectory(filesDir);
-            cachePath = Path.Combine(filesDir, cacheDirName);
+            globalConfiguration.Viewer.SetFilesDirectory(filesPath);
+            cachePath = Path.Combine(filesPath, cacheDirName);
         }
 
         /// <summary>
@@ -265,6 +266,7 @@ namespace MyWebApplication.Controllers
         {
             if (!string.IsNullOrEmpty(path))
             {
+                path = GetFullPath(path);
                 if (File.Exists(path))
                 {
                     HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -352,6 +354,8 @@ namespace MyWebApplication.Controllers
                 {
                     using (WebClient client = new WebClient())
                     {
+                        client.Headers.Add("User-Agent: Other");
+
                         // get file name from the URL
                         Uri uri = new Uri(url);
                         string fileName = Path.GetFileName(uri.LocalPath);
@@ -570,7 +574,7 @@ namespace MyWebApplication.Controllers
         private LoadDocumentEntity GetDocumentPages(PostedDataEntity postedData, bool loadAllPages, bool printVersion = false)
         {
             // get/set parameters
-            string documentGuid = postedData.guid;
+            string documentGuid = GetFullPath(postedData.guid);
             string password = string.IsNullOrEmpty(postedData.password) ? null : postedData.password;
 
             var fileFolderName = Path.GetFileName(documentGuid).Replace(".", "_");
@@ -600,6 +604,15 @@ namespace MyWebApplication.Controllers
             }
 
             return loadDocumentEntity;
+        }
+
+        private string GetFullPath(string fullOrRelativePath)
+        {
+            if (Path.IsPathRooted(fullOrRelativePath))
+                return fullOrRelativePath;
+
+            var fullPath = Path.Combine(filesPath, fullOrRelativePath);
+            return fullPath;
         }
 
         private LoadDocumentEntity GetLoadDocumentEntity(bool loadAllPages, string documentGuid, string fileCacheSubFolder, ICustomViewer customViewer, bool printVersion)
